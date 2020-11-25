@@ -1,9 +1,6 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Windows.Data.Text;
-using Windows.Media.Devices;
 using RomanNumerals;
 
 namespace UnitTestRomanNumerals

@@ -4,71 +4,91 @@ using System.Runtime.CompilerServices;
 
 namespace RomanNumerals
 {
-    public static class Extensions
+
+public static class Extensions
     {
         private enum PlaceValue : uint
         {
-            Units     = 1,
-            Tens      = 10,
-            Hundreds  = 100,
+            Units = 1,
+            Tens = 10,
+            Hundreds = 100,
             Thousands = 1000
+        }
+
+        private class SymbolsForPlaceValue
+        {
+            private static readonly char[] symbols = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
+            private static readonly Dictionary<PlaceValue, int> baseSymbolIndexForPlaceValue = 
+                new Dictionary<PlaceValue, int>() {
+                    { PlaceValue.Units,     0 },
+                    { PlaceValue.Tens,      2 },
+                    { PlaceValue.Hundreds,  4 },
+                    { PlaceValue.Thousands, 6 }
+                };
+
+            private int baseSymbolIndex;
+
+             public SymbolsForPlaceValue(PlaceValue placeValue) =>
+                baseSymbolIndex = baseSymbolIndexForPlaceValue[placeValue];
+
+            public char Base() => symbols[baseSymbolIndex];
+            public char BaseTimesFive() => symbols[baseSymbolIndex + 1];
+            public char BaseTimesTen() => symbols[baseSymbolIndex + 2];
         }
 
         public static string ToRomanNumeralString(this int number)
         {
-            if (number < 0 || number >= 4000)
+            if (number < 0 || number > 3999)
             {
                 throw new ArgumentOutOfRangeException("Argument must be between 0 and 3999", "number");
             }
 
-            String roman = "";
+            String romanNumerals = "";
 
-            roman += ConvertPlaceValue(number, PlaceValue.Thousands);
-            roman += ConvertPlaceValue(number, PlaceValue.Hundreds);
-            roman += ConvertPlaceValue(number, PlaceValue.Tens);
-            roman += ConvertPlaceValue(number, PlaceValue.Units);
+            romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(PlaceValue.Thousands);
+            romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(PlaceValue.Hundreds);
+            romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(PlaceValue.Tens);
+            romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(PlaceValue.Units);
 
-            return roman;
+            return romanNumerals;
         }
 
-        private static string ConvertPlaceValue(int numberIn, PlaceValue placeValue)
+        private static string DigitAtPlaceValueToRomanNumeralString(this int number, PlaceValue placeValue)
         {
-            var symbols = new char[] { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
-            var map = new Dictionary<int, int>() {
-                { 1, 0 }, { 10, 2 }, { 100, 4 }, { 1000, 6 }
-            };
-            int unit = (int)placeValue;
-            int number = numberIn % (unit * 10);
+            var symbols = new SymbolsForPlaceValue(placeValue);
+            int digit = number.DigitAtPlaceValue(placeValue);
 
-            String roman = "";
-
-            if (number >= 9 * unit)
+            switch (digit)
             {
-                roman += symbols[map[unit]];
-                roman += symbols[map[unit] + 2];
-                number -= 9 * unit;
+                case 9:
+                    return symbols.Base().ToString() + symbols.BaseTimesTen();
+
+                case 4:
+                    return symbols.Base().ToString() + symbols.BaseTimesFive();
+
+                case 0:
+                    return "";
             }
 
-            if (number >= 5 * unit)
+            String romanNumerals = "";
+
+            if (digit >= 5)
             {
-                roman += symbols[map[unit] + 1];
-                number -= 5 * unit;
+                romanNumerals += symbols.BaseTimesFive();
+                digit -= 5;
             }
 
-            if (number >= 4 * unit)
+
+            while (digit >= 1)
             {
-                roman += symbols[map[unit]];
-                roman += symbols[map[unit] + 1];
-                number -= 4 * unit;
+                romanNumerals += symbols.Base();
+                digit -= 1;
             }
 
-            while (number >= 1 * unit)
-            {
-                roman += symbols[map[unit]];
-                number -= 1 * unit;
-            }
-
-            return roman;
+            return romanNumerals;
         }
+
+        private static int DigitAtPlaceValue(this int number, PlaceValue placeValue) => 
+            number / (int)placeValue % 10;
     }
 }
