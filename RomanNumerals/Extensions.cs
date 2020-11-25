@@ -28,7 +28,7 @@ public static class Extensions
 
             private int baseSymbolIndex;
 
-             public SymbolsForPlaceValue(PlaceValue placeValue) =>
+            public SymbolsForPlaceValue(PlaceValue placeValue) =>
                 baseSymbolIndex = baseSymbolIndexForPlaceValue[placeValue];
 
             public char Base() => symbols[baseSymbolIndex];
@@ -55,21 +55,27 @@ public static class Extensions
 
         private static string DigitAtPlaceValueToRomanNumeralString(this int number, PlaceValue placeValue)
         {
-            var symbols = new SymbolsForPlaceValue(placeValue);
             int digit = number.DigitAtPlaceValue(placeValue);
 
             switch (digit)
             {
                 case 9:
-                    return symbols.Base().ToString() + symbols.BaseTimesTen();
+                {
+                    var s = new SymbolsForPlaceValue(placeValue);
+                    return s.Base().ToString() + s.BaseTimesTen();
+                }
 
                 case 4:
-                    return symbols.Base().ToString() + symbols.BaseTimesFive();
+                {
+                    var s = new SymbolsForPlaceValue(placeValue);
+                    return s.Base().ToString() + s.BaseTimesFive();
+                }
 
                 case 0:
                     return "";
             }
 
+            var symbols = new SymbolsForPlaceValue(placeValue);
             String romanNumerals = "";
 
             if (digit >= 5)
@@ -77,7 +83,6 @@ public static class Extensions
                 romanNumerals += symbols.BaseTimesFive();
                 digit -= 5;
             }
-
 
             while (digit >= 1)
             {

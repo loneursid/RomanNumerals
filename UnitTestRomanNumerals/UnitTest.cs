@@ -6,7 +6,7 @@ using RomanNumerals;
 namespace UnitTestRomanNumerals
 {
     [TestClass]
-    public class UnitTest1
+    public class TestToRomanNumeralString
     {
         [TestMethod] public void Test0() { Assert.AreEqual("", 0.ToRomanNumeralString()); }
 
