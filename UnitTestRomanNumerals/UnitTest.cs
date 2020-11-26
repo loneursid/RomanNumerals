@@ -185,11 +185,8 @@ namespace UnitTestRomanNumerals
         {
             // Takes the source value from the orginal dataset and cast it to uint 
             // as this is what the function expects for this run.
-            IEnumerable<object[]> data = Data.GetData();
-            foreach (object[] o in data)
-            {
+            foreach (object[] o in Data.GetData())
                 yield return new object[] { (uint)(int)o[0], o[1] };
-            }
         }
     }
 }

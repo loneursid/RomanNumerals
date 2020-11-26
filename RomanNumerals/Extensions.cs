@@ -19,7 +19,8 @@ public static class Extensions
         {
             private static readonly char[] symbols = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
             private static readonly Dictionary<PlaceValue, int> baseSymbolIndexForPlaceValue = 
-                new Dictionary<PlaceValue, int>() {
+                new Dictionary<PlaceValue, int>() 
+                {
                     { PlaceValue.Units,     0 },
                     { PlaceValue.Tens,      2 },
                     { PlaceValue.Hundreds,  4 },
@@ -39,9 +40,7 @@ public static class Extensions
         public static string ToRomanNumeralString(this int number)
         {
             if (number < 0 || number > 3999)
-            {
                 throw new ArgumentOutOfRangeException("Argument must be between 0 and 3999", "number");
-            }
 
             return ((uint)number).ToRomanNumeralStringNoCheck();
         }
@@ -49,9 +48,7 @@ public static class Extensions
         public static string ToRomanNumeralString(this uint number)
         {
             if (number > 3999)
-            {
                 throw new ArgumentOutOfRangeException("Argument must be less than or equal to 3999", "number");
-            }
 
             return number.ToRomanNumeralStringNoCheck();
         }
@@ -60,10 +57,8 @@ public static class Extensions
         {
             String romanNumerals = "";
 
-            romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(PlaceValue.Thousands);
-            romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(PlaceValue.Hundreds);
-            romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(PlaceValue.Tens);
-            romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(PlaceValue.Units);
+            foreach (PlaceValue placeValue in new PlaceValue[] { PlaceValue.Thousands, PlaceValue.Hundreds, PlaceValue.Tens, PlaceValue.Units })
+                romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(placeValue);
 
             return romanNumerals;
         }
