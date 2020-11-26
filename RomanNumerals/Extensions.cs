@@ -15,6 +15,9 @@ public static class Extensions
             Thousands = 1000
         }
 
+        private static readonly PlaceValue[] placeValuesFomLeftToRight = 
+            { PlaceValue.Thousands, PlaceValue.Hundreds, PlaceValue.Tens, PlaceValue.Units };
+
         private class SymbolsForPlaceValue
         {
             private static readonly char[] symbols = { 'I', 'V', 'X', 'L', 'C', 'D', 'M' };
@@ -57,11 +60,12 @@ public static class Extensions
         {
             String romanNumerals = "";
 
-            foreach (PlaceValue placeValue in new PlaceValue[] { PlaceValue.Thousands, PlaceValue.Hundreds, PlaceValue.Tens, PlaceValue.Units })
+            foreach (PlaceValue placeValue in placeValuesFomLeftToRight)
                 romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(placeValue);
 
             return romanNumerals;
         }
+
         private static string DigitAtPlaceValueToRomanNumeralString(this uint number, PlaceValue placeValue)
         {
             uint digit = number.DigitAtPlaceValue(placeValue);
