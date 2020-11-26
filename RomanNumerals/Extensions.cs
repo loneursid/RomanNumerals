@@ -43,6 +43,21 @@ public static class Extensions
                 throw new ArgumentOutOfRangeException("Argument must be between 0 and 3999", "number");
             }
 
+            return ((uint)number).ToRomanNumeralStringNoCheck();
+        }
+
+        public static string ToRomanNumeralString(this uint number)
+        {
+            if (number > 3999)
+            {
+                throw new ArgumentOutOfRangeException("Argument must be less than or equal to 3999", "number");
+            }
+
+            return number.ToRomanNumeralStringNoCheck();
+        }
+
+        private static string ToRomanNumeralStringNoCheck(this uint number)
+        {
             String romanNumerals = "";
 
             romanNumerals += number.DigitAtPlaceValueToRomanNumeralString(PlaceValue.Thousands);
@@ -52,10 +67,9 @@ public static class Extensions
 
             return romanNumerals;
         }
-
-        private static string DigitAtPlaceValueToRomanNumeralString(this int number, PlaceValue placeValue)
+        private static string DigitAtPlaceValueToRomanNumeralString(this uint number, PlaceValue placeValue)
         {
-            int digit = number.DigitAtPlaceValue(placeValue);
+            uint digit = number.DigitAtPlaceValue(placeValue);
 
             switch (digit)
             {
@@ -93,7 +107,7 @@ public static class Extensions
             return romanNumerals;
         }
 
-        private static int DigitAtPlaceValue(this int number, PlaceValue placeValue) => 
-            number / (int)placeValue % 10;
+        private static uint DigitAtPlaceValue(this uint number, PlaceValue placeValue) => 
+            number / (uint)placeValue % 10;
     }
 }
